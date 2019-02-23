@@ -42,9 +42,24 @@ configure()
   sudo -u www-data php occ maintenance:mode --on
 
   echo "moving database to $DBDIR..."
+
   service mysql stop
   mv "$SRCDIR" "$DBDIR" && \
     sed -i "s|^datadir.*|datadir = $DBDIR|" /etc/mysql/mariadb.conf.d/90-ncp.cnf
+
+  grep -q -e btrfs <(stat -fc%T "$DBDIR") && {
+    local mp="$(stat -c '%m' "$DBDIR")"
+    local dev="$(lsblk -lno NAME,MOUNTPOINT | awk "{ if (\$2 == \"$mp\") print \$1; }")"
+    local block_size="$(blockdev --getbsz /dev/"$dev")"
+    cat > /etc/mysql/mariadb.conf.d/92-ncp-btrfs.cnf <<EOF
+[server]
+innodb_doublewrite = 0
+innodb_page_size = $block_size
+EOF
+  } || {
+    rm -f /etc/mysql/mariadb.conf.d/92-ncp-btrfs.cnf
+  }
+
   service mysql start 
 
   sudo -u www-data php occ maintenance:mode --off

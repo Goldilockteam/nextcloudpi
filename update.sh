@@ -202,6 +202,18 @@ query_cache_size = 0
 tmp_table_size= 64M
 max_heap_table_size= 64M
 EOF
+
+    dbdir="$( grep datadir /etc/mysql/mariadb.conf.d/90-ncp.cnf | awk -F "= " '{ print $2 }' )"
+    grep -q -e btrfs <(stat -fc%T "$dbdir") && {
+      mp="$(stat -c '%m' "$dbdir")"
+      dev="$(lsblk -lno NAME,MOUNTPOINT | awk "{ if (\$2 == \"$mp\") print \$1; }")"
+      block_size="$(blockdev --getbsz /dev/"$dev")"
+      cat > /etc/mysql/mariadb.conf.d/92-ncp-btrfs.cnf <<EOF
+[server]
+innodb_doublewrite = 0
+innodb_page_size = $block_size
+EOF
+    }
     service mysql restart
   }
 

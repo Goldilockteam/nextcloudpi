@@ -1,7 +1,9 @@
 
-[v1.8.4](https://github.com/nextcloud/nextcloudpi/commit/c3a1c8c) (2019-02-23) nc-nextcloud: disable .htaccess
+[v1.8.5](https://github.com/nextcloud/nextcloudpi/commit/394a851) (2019-02-23) nc-database: optimize for BTRFS
 
-[v1.8.3](https://github.com/nextcloud/nextcloudpi/commit/b2f38db) (2019-02-23) nc-nextcloud: disable .user.ini
+[v1.8.4](https://github.com/nextcloud/nextcloudpi/commit/6d51b50) (2019-02-23) nc-nextcloud: disable .htaccess
+
+[v1.8.3  ](https://github.com/nextcloud/nextcloudpi/commit/b2f38db) (2019-02-23) nc-nextcloud: disable .user.ini
 
 [v1.8.2  ](https://github.com/nextcloud/nextcloudpi/commit/1dfa11a) (2019-02-23) nc-limits: autocalculate database memory
 
